@@ -1,0 +1,207 @@
+---- UC1 ----
+mysql> show databases;
++---------------------+
+| Database            |
++---------------------+
+| addressbook         | |
+| emp_payroll_service |
+| information_schema  |
+| mysql               |
+| org                 |
+| payroll_service     |
+| performance_schema  |
+| sakila              |
+| sys                 |
+| world               |
++---------------------+
+mysql> create database addressbook_service;
++---------------------+
+| Database            |
++---------------------+
+| addressbook         |
+| addressbook_service |
+| emp_payroll_service |
+| information_schema  |
+| mysql               |
+| org                 |
+| payroll_service     |
+| performance_schema  |
+| sakila              |
+| sys                 |
+| world               |
++---------------------+
+mysql> use addressbook_service;
+Database changed
+
+----UC2-----
+mysql>  show tables;
+mysql>  CREATE TABLE addressbook (
+	id int not null auto_increment primary key,
+	firstname varchar(20) NOT NULL, 
+        lastname varchar(20) NOT NULL,
+        address varchar(100),
+        city varchar(20) NOT NULL,
+        state varchar(20) NOT NULL,
+        zipcode integer(6),
+        phonenumber varchar(10) NOT NULL UNIQUE,
+        email varchar(20) NOT NULL UNIQUE,
+        UNIQUE KEY name (firstname,lastname)
+);
+mysql> show tables;
++-------------------------------+
+| Tables_in_addressbook_service |
++-------------------------------+
+| addressbook                   |
++-------------------------------+
+mysql> desc addressbook;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| firstname   | varchar(20)  | NO   | MUL | NULL    |                |
+| lastname    | varchar(20)  | NO   |     | NULL    |                |
+| address     | varchar(100) | YES  |     | NULL    |                |
+| city        | varchar(20)  | NO   |     | NULL    |                |
+| state       | varchar(20)  | NO   |     | NULL    |                |
+| zipcode     | int          | YES  |     | NULL    |                |
+| phonenumber | varchar(10)  | NO   | UNI | NULL    |                |
+| email       | varchar(20)  | NO   | UNI | NULL    |                |
+| ab_name     | varchar(20)  | YES  |     | NULL    |                |
+| ab_type     | varchar(50)  | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+-----UC3-----
+mysql> INSERT INTO addressbook VALUES
+(1,'Julekha','Mulani','Kothrud','Pune','Maharashtra','424112','1234567890', 'jul.m@gmail.com'),
+(2,'Rohini','Patil','Deccan','Pune','Maharashtra','420166','9191919291', 'rohini.p@gmail.com'),
+(3,'Divya','K','Andhra','Andhra Pradesh','AP','487879','4567890125', 'divya.k@yahoo.com'),
+(4,'Neeta','M','Madhya Pradesh','Gwalior','MP','43342','6577567890', 'neeta.m@gmail.com');
+
+
+mysql> select *from addressbook;
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+
+| id | firstname | lastname | address        | city           | state       | zipcode | phonenumber | email              | 
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+
+|  1 | Julekha   | Mulani   | Kothrud        | Pune           | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    |           
+|  2 | Rohini    | Patil    | Deccan         | Pune           | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com |           
+|  3 | Divya     | K        | Andhra         | Andhra Pradesh | AP          |  487879 | 4567890125  | divya.k@yahoo.com  |       
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior        | MP          |   43342 | 6577567890  | neeta.m@gmail.com  |      
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+
+4 rows in set (0.00 sec)
+
+-----UC4-----
+mysql> UPDATE addressbook SET firstname = 'Julekhaaa' WHERE firstname = 'Julekha';
+mysql> SELECT * from addressbook where firstname = 'Julekhaaa';
++----+-----------+----------+---------+------+-------------+---------+-------------+-----------------+
+| id | firstname | lastname | address | city | state       | zipcode | phonenumber | email           | 
++----+-----------+----------+---------+------+-------------+---------+-------------+-----------------+
+|  1 | Julekhaaa | Mulani   | Kothrud | Pune | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com |
++----+-----------+----------+---------+------+-------------+---------+-------------+-----------------+
+1 row in set (0.00 sec)
+
+----UC5----
+mysql>DELETE from addressbook WHERE firstname = 'Julekhaaa';
+
+----UC6----
+
+mysql> SELECT * from addressbook where city = 'Pune' OR state = 'MP';
++----+-----------+----------+----------------+---------+-------------+---------+-------------+--------------------+
+| id | firstname | lastname | address        | city    | state       | zipcode | phonenumber | email              | 
++----+-----------+----------+----------------+---------+-------------+---------+-------------+--------------------+
+|  1 | Julekhaaa | Mulani   | Kothrud        | Pune    | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    |         
+|  2 | Rohini    | Patil    | Deccan         | Pune    | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com |             
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior | MP          |   43342 | 6577567890  | neeta.m@gmail.com  |        
++----+-----------+----------+----------------+---------+-------------+---------+-------------+--------------------+
+3 rows in set (0.00 sec)
+
+----UC7----
+mysql> SELECT city, state, COUNT(*) from addressbook where city = 'Pune' AND state = 'Maharashtra';
++------+-------------+----------+
+| city | state       | COUNT(*) |
++------+-------------+----------+
+| Pune | Maharashtra |        2 |
++------+-------------+----------+
+1 row in set (0.01 sec)
+
+----UC8----
+mysql> SELECT * FROM addressbook WHERE state = 'Maharashtra' ORDER BY firstname ASC;
++----+-----------+----------+---------+------+-------------+---------+-------------+--------------------+
+| id | firstname | lastname | address | city | state       | zipcode | phonenumber | email              | 
++----+-----------+----------+---------+------+-------------+---------+-------------+--------------------+
+|  1 | Julekhaaa | Mulani   | Kothrud | Pune | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    | 
+|  2 | Rohini    | Patil    | Deccan  | Pune | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com |  
++----+-----------+----------+---------+------+-------------+---------+-------------+--------------------+
+2 rows in set (0.00 sec)
+
+----UC9----
+mysql>ALTER  TABLE addressbook add ab_name varchar(20);
+
+mysql> select *from addressbook;
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+
+| id | firstname | lastname | address        | city           | state       | zipcode | phonenumber | email              | ab_name      |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+
+|  1 | Julekhaaa | Mulani   | Kothrud        | Pune           | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    |    NULL      |
+|  2 | Rohini    | Patil    | Deccan         | Pune           | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com |    NULL      |
+|  3 | Divya     | K        | Andhra         | Andhra Pradesh | AP          |  487879 | 4567890125  | divya.k@yahoo.com  |    NULL      |
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior        | MP          |   43342 | 6577567890  | neeta.m@gmail.com  |    NULL      |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql>alter table addressbook add family_type char(3);
+mysql>alter table addressbook add friends_type char(3);
+mysql>alter table addressbook add profession_type char(3);
+mysql>select *from addressbook;
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+| id | firstname | lastname | address        | city           | state       | zipcode | phonenumber | email              | ab_name      | family_type | friends_type | profession_type |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+|  1 | Julekhaaa | Mulani   | Kothrud        | Pune           | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    | AddressBook2 | NULL        | NULL         | NULL            |
+|  2 | Rohini    | Patil    | Deccan         | Pune           | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com | AddressBook1 | NULL        | NULL         | NULL            |
+|  3 | Divya     | K        | Andhra         | Andhra Pradesh | AP          |  487879 | 4567890125  | divya.k@yahoo.com  | AddressBook3 | NULL        | NULL         | NULL            |
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior        | MP          |   43342 | 6577567890  | neeta.m@gmail.com  | AddressBook3 | NULL        | NULL         | NULL            |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+4 rows in set (0.00 sec)
+
+----UC10----
+
+mysql>update addressbook set ab_name = 'AddressBook1' where id = 2;
+mysql>update addressbook set ab_name = 'AddressBook2' where id = 1;
+mysql>update addressbook set ab_name = 'AddressBook3' where id IN (3,4);
+
+mysql>update addressbook set family_type = 'yes' where id = 1;
+mysql>update addressbook set friends_type = 'yes' where id = 2;
+mysql>update addressbook set profession_type = 'yes' where id IN(3,4);
+
+mysql> select *from addressbook;
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+| id | firstname | lastname | address        | city           | state       | zipcode | phonenumber | email              | ab_name      | family_type | friends_type | profession_type |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+|  1 | Julekhaaa | Mulani   | Kothrud        | Pune           | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    | AddressBook2 | yes         | NULL         | NULL            |
+|  2 | Rohini    | Patil    | Deccan         | Pune           | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com | AddressBook1 | NULL        | yes          | yes             |
+|  3 | Divya     | K        | Andhra         | Andhra Pradesh | AP          |  487879 | 4567890125  | divya.k@yahoo.com  | AddressBook3 | NULL        | NULL         | yes             |
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior        | MP          |   43342 | 6577567890  | neeta.m@gmail.com  | AddressBook3 | NULL        | NULL         | yes             |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+4 rows in set (0.02 sec)
+
+-- UC10---  
+mysql> SELECT family_type, friends_type, profession_type, COUNT(*) FROM addressbook GROUP BY family_type = 'yes', friends_type = 'yes', profession_type ='yes';
++-------------+--------------+-----------------+----------+
+| family_type | friends_type | profession_type | COUNT(*) |
++-------------+--------------+-----------------+----------+
+| yes         | NULL         | NULL            |        1 |
+| NULL        | yes          | NULL            |        1 |
+| NULL        | NULL         | yes             |        2 |
++-------------+--------------+-----------------+----------+
+3 rows in set (0.00 sec)
+
+---UC11---
+mysql> update addressbook set friends_type = 'yes', family_type = 'yes' where id = 1;
+mysql> select *from addressbook;
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+| id | firstname | lastname | address        | city           | state       | zipcode | phonenumber | email              | ab_name      | family_type | friends_type | profession_type |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+|  1 | Julekhaaa | Mulani   | Kothrud        | Pune           | Maharashtra |  424112 | 1234567890  | jul.m@gmail.com    | AddressBook2 | yes         | yes          | NULL            |
+|  2 | Rohini    | Patil    | Deccan         | Pune           | Maharashtra |  420166 | 9191919291  | rohini.p@gmail.com | AddressBook1 | NULL        | yes          | NULL            |
+|  3 | Divya     | K        | Andhra         | Andhra Pradesh | AP          |  487879 | 4567890125  | divya.k@yahoo.com  | AddressBook3 | NULL        | NULL         | yes             |
+|  4 | Neeta     | M        | Madhya Pradesh | Gwalior        | MP          |   43342 | 6577567890  | neeta.m@gmail.com  | AddressBook3 | NULL        | NULL         | yes             |
++----+-----------+----------+----------------+----------------+-------------+---------+-------------+--------------------+--------------+-------------+--------------+-----------------+
+4 rows in set (0.00 sec)
